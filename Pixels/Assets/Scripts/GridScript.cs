@@ -18,7 +18,6 @@ public class GridScript : MonoBehaviour
 
     public int brushSize;
     public bool update;
-    private bool preventUpdate;
     public bool switchType;
 
     void Start()
@@ -34,20 +33,12 @@ public class GridScript : MonoBehaviour
     {
         if (Input.GetButton("Fire1"))
         {
-            preventUpdate = true;
             Vector3 mousePos = Input.mousePosition;
             {
                 //ReadPixel((int)mousePos.x, (int)mousePos.y);
-                DrawPixel((int)mousePos.x, (int)mousePos.y, chosenPixelType, true,brushSize);
+                DrawPixel((int)mousePos.x, (int)mousePos.y, chosenPixelType, true, brushSize);
+                Debug.Log(mousePos.x); Debug.Log(mousePos.y);
             }
-        }
-        if (Input.GetButtonUp("Fire1"))
-        {
-            preventUpdate = false;
-        }
-        if (update && !preventUpdate)
-        {
-            UpdateGrid();
         }
         if (switchType)
         {
@@ -61,6 +52,14 @@ public class GridScript : MonoBehaviour
             {
                 chosenPixelType = redPixelType;
             }
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (update)
+        {
+            UpdateGrid();
         }
     }
 
@@ -96,6 +95,7 @@ public class GridScript : MonoBehaviour
                 for (int v = -(size); v < (size); v++)
                 {
                     AddToPixelGrid(x + i, y + v, pixType);
+                   
                 }
             }
         }
@@ -138,7 +138,7 @@ public class GridScript : MonoBehaviour
 
         foreach (var pix in new Dictionary<Vector2, Pixel>(pixelGrid))
         {
-            if (pix.Value.type != otherPixelType && !pixelGrid.ContainsKey(pix.Key - new Vector2(0,1)))
+            if (pix.Value.type != otherPixelType && !pixelGrid.ContainsKey(new Vector2(pix.Key.x,pix.Key.y - 1)))
             {
                 if(IsInBounds(pix.Key - new Vector2(0,1)))
                 {
