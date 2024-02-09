@@ -138,13 +138,9 @@ public class GridScript : MonoBehaviour
 
         foreach (var pix in new Dictionary<Vector2, Pixel>(pixelGrid))
         {
-            if (pix.Value.type != otherPixelType && !pixelGrid.ContainsKey(new Vector2(pix.Key.x,pix.Key.y - 1)))
+            if (pix.Value.type != otherPixelType && (!pixelGrid.ContainsKey(new Vector2(pix.Key.x,pix.Key.y - 1) )&& pix.Key.y - 1 < tex.height))
             {
-                if(IsInBounds(pix.Key - new Vector2(0,1)))
-                {
                     RemoveFromPixelGrid((int)pix.Key.x, (int)pix.Key.y);
-                    AddToPixelGrid((int)pix.Key.x, (int)pix.Key.y - 1, pix.Value.type);
-                } 
             }
         }
         
